@@ -1,0 +1,25 @@
+server:
+  port: 8447
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: sweden-accounting-proxy-route
+        uri: http://127.0.0.1:${server.port}
+        predicates:
+        - Path=/api/countries/se/accounting/{*accountingPath}
+        filters:
+        - SetPath={accountingPath}
+
+      - id: sweden-accounting-proxy-route-fixed
+        uri: http://127.0.0.1:${server.port}
+        predicates:
+        - Path=/api-fixed/countries/se/accounting/{*accountingPath}
+        filters:
+        - SetPathFixed={accountingPath}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.web.reactive.DispatcherHandler: DEBUG
